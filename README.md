@@ -13,10 +13,12 @@ A Next.js gallery application that displays SVG renderings of pelicans on bicycl
 Here are a couple of examples from the gallery:
 
 **Claude 3.7 Sonnet:**
-![Claude 3.7 Sonnet example](app/data/svgs/claude-3-7-sonnet-20250219_e1fa7d93.svg)
+
+![Claude 3.7 Sonnet example](https://raw.githubusercontent.com/denamwangi/pelicanLLM_demo/main/public/anthropic.png)
 
 **GPT-4o Mini:**
-![GPT-4o Mini example](app/data/svgs/gpt-4o-mini_04697c05.svg)
+
+![GPT-4o Mini example](https://raw.githubusercontent.com/denamwangi/pelicanLLM_demo/main/public/open%20ai.png)
 
 ## Getting Started
 
