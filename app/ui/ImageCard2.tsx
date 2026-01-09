@@ -1,14 +1,12 @@
-import { Svg } from "@prisma/client";
-import { SvgWithModelAndProvider } from "@/app/actions";
+import type { SvgWithModelAndProvider } from "@/app/lib/definitions";
 
-export default function ImageCard({
+export default function ImageCard2({
   svgData,
   index,
 }: {
   svgData: SvgWithModelAndProvider;
   index: number;
 }) {
-  console.log("svgData", svgData);
   const { content, model } = svgData;
   const { displayName, provider } = model;
   return (

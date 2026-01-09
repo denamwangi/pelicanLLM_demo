@@ -1,18 +1,24 @@
 import {
   MagnifyingGlassIcon,
-  SparklesIcon,
   QueueListIcon,
   XMarkIcon,
   BoltIcon,
 } from "@heroicons/react/24/outline";
 import { motion } from "framer-motion";
 
+interface ControlBarProps {
+  query: string;
+  setQuery: (query: string) => void;
+  onRandomize: () => void;
+  onShowAll: () => void;
+}
+
 export default function ControlBar({
   query,
   setQuery,
   onRandomize,
   onShowAll,
-}) {
+}: ControlBarProps) {
   return (
     <div className="flex flex-col gap-4 w-full max-w-4xl mx-auto mb-8">
       <div className="flex items-center gap-3 p-2 bg-white border border-slate-200 rounded-2xl shadow-sm focus-within:border-blue-400 focus-within:ring-4 focus-within:ring-blue-500/10 transition-all">

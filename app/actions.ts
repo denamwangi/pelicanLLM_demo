@@ -1,68 +1,42 @@
 "use server";
-import prisma from "@/app/lib/prisma";
-import { Svg, Prisma } from "@prisma/client";
+import {
+  fetchInitial as fetchInitialService,
+  searchByModelOrProvider as searchByModelOrProviderService,
+  fetchAllModels as fetchAllModelsService,
+  fetchRandomSvgs as fetchRandomSvgsService,
+} from "@/app/lib/svg-service";
+import type { SvgWithModelAndProvider } from "@/app/lib/definitions";
 
-// This creates a type that includes the relation
-
-export type SvgWithModelAndProvider = Prisma.SvgGetPayload<{
-  include: {
-    model: {
-      include: { provider: true };
-    };
-  };
-}>;
 /**
- * Fetches the most recent SVG for each of the provided model names.
+ * Server action: Fetches the most recent SVG for each of the provided model names.
  */
 export async function fetchInitial(
   modelNames: string[]
 ): Promise<SvgWithModelAndProvider[]> {
-  return await prisma.svg.findMany({
-    where: {
-      model: {
-        name: { in: modelNames },
-      },
-    },
-    distinct: ["modelId"],
-    orderBy: {
-      createdAt: "desc",
-    },
-    // ✅ Nested include to reach the Provider via the Model
-    include: {
-      model: {
-        include: {
-          provider: true,
-        },
-      },
-    },
-  });
+  return await fetchInitialService(modelNames);
 }
 
-export async function searchByModelOrProvider(term: string) {
-  if (!term) return [];
+/**
+ * Server action: Searches for SVGs by model name or provider name.
+ */
+export async function searchByModelOrProvider(
+  term: string
+): Promise<SvgWithModelAndProvider[]> {
+  return await searchByModelOrProviderService(term);
+}
 
-  return await prisma.svg.findMany({
-    where: {
-      OR: [
-        {
-          model: {
-            name: { contains: term, mode: "insensitive" },
-          },
-        },
-        {
-          model: {
-            provider: {
-              name: { contains: term, mode: "insensitive" },
-            },
-          },
-        },
-      ],
-    },
-    include: {
-      model: {
-        include: { provider: true }, // This returns the full context for your UI
-      },
-    },
-    take: 20,
-  });
+/**
+ * Server action: Fetches the most recent SVG for each model that has at least one SVG.
+ */
+export async function fetchAllModels(): Promise<SvgWithModelAndProvider[]> {
+  return await fetchAllModelsService();
+}
+
+/**
+ * Server action: Fetches the most recent SVG for each model in each group of model names.
+ */
+export async function fetchRandomSvgs(
+  modelGroups: string[][]
+): Promise<SvgWithModelAndProvider[]> {
+  return await fetchRandomSvgsService(modelGroups);
 }
