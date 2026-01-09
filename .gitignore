@@ -60,3 +60,6 @@ Thumbs.db
 
 # Optional: uncomment if you don't want to commit the generated JSON
 # /app/data/svgs.json
+
+/app/generated/prisma
+.env*.local

@@ -1,0 +1,42 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("POSTGRES_URL")
+}
+
+model Provider {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  displayName String   @map("display_name")
+  avatarSvg   String?  @map("avatar_svg")
+  createdAt   DateTime @default(now()) @map("created_at")
+  models      Model[]
+
+  @@map("provider")
+}
+
+model Model {
+  id          String    @id @default(uuid())
+  providerId  String    @map("provider_id")
+  name        String    @unique
+  displayName String    @map("display_name")
+  releaseDate DateTime? @map("release_date")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  provider    Provider  @relation(fields: [providerId], references: [id])
+  svgs        Svg[]
+
+  @@map("model")
+}
+
+model Svg {
+  id        String   @id @default(uuid())
+  modelId   String   @map("model_id")
+  content   String   @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
+  model     Model    @relation(fields: [modelId], references: [id])
+
+  @@map("svg")
+}

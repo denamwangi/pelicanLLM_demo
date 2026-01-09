@@ -7,10 +7,18 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "generate-json": "node ./app/lib/generateSVGJSON.js"
+    "generate-json": "node ./app/lib/generateSVGJSON.js",
+    "db:seed": "dotenv -e .env.local -- npx prisma db seed",
+    "db:migrate": "dotenv -e .env.local -- npx prisma migrate dev"
+  },
+  "prisma": {
+    "seed": "node prisma/seed.mjs"
   },
   "dependencies": {
+    "@prisma/client": "^5.22.0",
+    "g": "^2.0.1",
     "next": "16.1.1",
+    "prisma": "^5.22.0",
     "react": "19.2.3",
     "react-dom": "19.2.3"
   },
@@ -20,6 +28,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "dotenv-cli": "^11.0.0",
     "eslint": "^9.39.2",
     "eslint-config-next": "16.1.1",
     "eslint-plugin-react": "^7.37.5",

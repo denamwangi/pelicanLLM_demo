@@ -23,7 +23,7 @@ export default function Grid() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 ">
       {data?.map((svgData, i) => (
-        <ImageCard key={i} svgData={svgData} />
+        <ImageCard key={i} index={i} svgData={svgData} />
       ))}
     </div>
   );

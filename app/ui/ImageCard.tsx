@@ -5,11 +5,20 @@ type SvgData = {
   model: string;
 };
 
-export default function ImageCard({ svgData }: { svgData: SvgData }) {
+export default function ImageCard({
+  svgData,
+  index,
+}: {
+  svgData: SvgData;
+  index: number;
+}) {
   const { content, provider, model } = svgData;
   return (
     <div>
-      <div className="max-w-sm bg-white rounded-lg shadow-md overflow-hidden">
+      <div
+        className="max-w-sm bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:-translate-y-1 animate-[fadeIn_0.5s_ease-out]"
+        style={{ animationDelay: `${index * 0.3}s` }}
+      >
         <div className="relative">
           <div className="absolute top-3 left-3 z-10">
             <span className="bg-black/70 text-white text-xs font-semibold px-3 py-1 rounded-full">
