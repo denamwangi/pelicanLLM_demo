@@ -1,6 +1,13 @@
+"use client";
 import Grid from "./ui/Grid";
+import { useState } from "react";
+import ControlBar from "./ui/controlbar";
 
 export default function Home() {
+  const [query, setQuery] = useState("");
+  const handleRandomize = () => {};
+  const handleShowAll = () => {};
+
   return (
     <div>
       <div className="bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 text-white px-8 py-12 mb-8">
@@ -16,6 +23,14 @@ export default function Home() {
             </p>
           </div>
         </div>
+      </div>
+      <div>
+        <ControlBar
+          query={query}
+          setQuery={setQuery}
+          onRandomize={handleRandomize}
+          onShowAll={handleShowAll}
+        />
       </div>
       <div className="px-4 h-full py-8">
         <Grid />

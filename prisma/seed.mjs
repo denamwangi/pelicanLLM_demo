@@ -1,5 +1,4 @@
 import { PrismaClient } from "@prisma/client";
-// import svgData from "../src/data/svgs.json";
 import svgData from "../app/data/svgs.json" assert { type: "json" };
 
 const prisma = new PrismaClient();
