@@ -12,7 +12,7 @@ export default function Home() {
           </p>
           <div className="bg-white/20 backdrop-blur-sm rounded-lg px-4 py-3 inline-block">
             <p className="text-sm font-semibold">
-              Current Prompt: "Draw a pelican on a bike"
+              Current Prompt: Draw a pelican on a bike
             </p>
           </div>
         </div>
