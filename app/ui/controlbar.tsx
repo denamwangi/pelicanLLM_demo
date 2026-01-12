@@ -28,7 +28,7 @@ export default function ControlBar({
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search by model or provider..."
+            placeholder="Search for OpenAI or Anthropic..."
             className="w-full bg-transparent outline-none text-slate-600 placeholder:text-slate-400"
           />
           {query && (

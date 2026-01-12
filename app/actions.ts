@@ -20,16 +20,21 @@ export async function fetchInitial(
  * Server action: Searches for SVGs by model name or provider name.
  */
 export async function searchByModelOrProvider(
-  term: string
-): Promise<SvgWithModelAndProvider[]> {
-  return await searchByModelOrProviderService(term);
+  term: string,
+  page: number = 1,
+  pageSize: number = 9
+): Promise<{ data: SvgWithModelAndProvider[]; total: number }> {
+  return await searchByModelOrProviderService(term, page, pageSize);
 }
 
 /**
- * Server action: Fetches the most recent SVG for each model that has at least one SVG.
+ * Server action: Fetches all SVGs with pagination.
  */
-export async function fetchAllModels(): Promise<SvgWithModelAndProvider[]> {
-  return await fetchAllModelsService();
+export async function fetchAllModels(
+  page: number = 1,
+  pageSize: number = 9
+): Promise<{ data: SvgWithModelAndProvider[]; total: number }> {
+  return await fetchAllModelsService(page, pageSize);
 }
 
 /**

@@ -1,6 +1,7 @@
 // src/lib/svg-service.ts
 import prisma from "@/app/lib/prisma";
 import type { SvgWithModelAndProvider } from "@/app/lib/definitions";
+import { Prisma } from "@prisma/client";
 
 /**
  * Fetches the most recent SVG for each of the provided model names.
@@ -44,50 +45,67 @@ export async function fetchInitial(
 /**
  * Searches for SVGs by model name or provider name.
  * Results are sorted by model creation date in ascending order (oldest first).
- * No date filtering is applied - all matching SVGs are returned.
  */
 export async function searchByModelOrProvider(
-  term: string
-): Promise<SvgWithModelAndProvider[]> {
-  if (!term) return [];
+  term: string,
+  page: number = 1,
+  pageSize: number = 9
+): Promise<{ data: SvgWithModelAndProvider[]; total: number }> {
+  if (!term) return { data: [], total: 0 };
 
-  return await prisma.svg.findMany({
-    where: {
-      OR: [
-        {
-          model: {
+  const skip = (page - 1) * pageSize;
+
+  const where: Prisma.SvgWhereInput = {
+    OR: [
+      {
+        model: {
+          name: { contains: term, mode: "insensitive" },
+        },
+      },
+      {
+        model: {
+          provider: {
             name: { contains: term, mode: "insensitive" },
           },
         },
-        {
-          model: {
-            provider: {
-              name: { contains: term, mode: "insensitive" },
-            },
-          },
+      },
+    ],
+  };
+
+  const [data, total] = await Promise.all([
+    prisma.svg.findMany({
+      where,
+      include: {
+        model: {
+          include: { provider: true },
         },
-      ],
-    },
-    include: {
-      model: {
-        include: { provider: true },
       },
-    },
-    orderBy: {
-      model: {
-        createdAt: "asc",
+      orderBy: {
+        model: {
+          createdAt: "asc",
+        },
       },
-    },
-    take: 50, // Increased limit to ensure all models are included
-  });
+      skip,
+      take: pageSize,
+    }),
+    prisma.svg.count({ where }),
+  ]);
+
+  return { data, total };
 }
 
 /**
- * Fetches all SVGs.
+ * Fetches all SVGs with pagination.
  * Results are grouped by provider, then sorted by model release date (oldest to newest) within each provider.
  */
-export async function fetchAllModels(): Promise<SvgWithModelAndProvider[]> {
-  const results = await prisma.svg.findMany({
+export async function fetchAllModels(
+  page: number = 1,
+  pageSize: number = 9
+): Promise<{ data: SvgWithModelAndProvider[]; total: number }> {
+  const skip = (page - 1) * pageSize;
+
+  // First, get all results and sort them
+  const allResults = await prisma.svg.findMany({
     include: {
       model: {
         include: {
@@ -98,7 +116,7 @@ export async function fetchAllModels(): Promise<SvgWithModelAndProvider[]> {
   });
 
   // Group by provider, then sort by model release date (oldest to newest) within each provider
-  return results.sort((a, b) => {
+  const sorted = allResults.sort((a, b) => {
     // First sort by provider name
     const providerA = a.model.provider.name;
     const providerB = b.model.provider.name;
@@ -115,6 +133,12 @@ export async function fetchAllModels(): Promise<SvgWithModelAndProvider[]> {
       : 0;
     return dateA - dateB;
   });
+
+  // Apply pagination
+  const data = sorted.slice(skip, skip + pageSize);
+  const total = sorted.length;
+
+  return { data, total };
 }
 
 /**
